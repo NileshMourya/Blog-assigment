@@ -42,7 +42,6 @@ export default async function BlogDetails({ params, searchParams }) {
   return (
     <>
       <ReadingProgress />
-      {/* <ShareButtons title={blog.title} /> */}
 
       <article className="max-w-6xl mx-auto px-6 py-16 grid grid-cols-1 lg:grid-cols-4 gap-12">
         {/* Main Content */}
