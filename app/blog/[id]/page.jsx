@@ -1,8 +1,8 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { getPaginatedBlogs } from "@/lib/api";
+import { getPaginatedBlogs } from "../../..lib/api";
 import ReadingProgress from "../../../Components/ReadingProgress";
-import ShareButtons from "../../../Components/ShareButton";
+
 import Link from "next/link";
 
 function calculateReadingTime(html) {

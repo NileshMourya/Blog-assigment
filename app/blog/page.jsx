@@ -1,5 +1,5 @@
-import BlogCard from "@/components/BlogCard";
-import Pagination from "@/components/Pagination";
+import BlogCard from "../../Components/BlogCard";
+import Pagination from "../../Components/Pagination";
 import { getPaginatedBlogs } from "../../lib/api";
 
 async function BlogPage({ searchParams }) {

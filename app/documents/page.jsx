@@ -1,4 +1,3 @@
-import React from "react";
 import ProjectFeatures from "../../Components/FeatureProject";
 const page = () => {
   return (
