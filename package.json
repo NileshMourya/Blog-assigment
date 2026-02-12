@@ -10,8 +10,6 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.11.2",
-    "@tailwindcss/typography": "^0.5.19",
-    "isomorphic-dompurify": "^3.0.0-rc.2",
     "next": "16.1.6",
     "react": "19.2.3",
     "react-dom": "19.2.3",

@@ -1,23 +1,26 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { getPaginatedBlogs } from "../../../lib/api";
+import { getBlogById, getPaginatedBlogs } from "../../../lib/api";
 import ReadingProgress from "../../../Components/ReadingProgress";
-
 import Link from "next/link";
 
-function calculateReadingTime(html) {
-  const text = html.replace(/<[^>]+>/g, "");
+function calculateReadingTime(text) {
+  if (!text) return 2;
   const words = text.split(/\s+/).length;
   return Math.ceil(words / 200);
 }
 
-export async function generateMetadata({ params, searchParams }) {
-  const { id } = await params;
-  const search = await searchParams;
-  const page = Number(search?.page) || 1;
+function formatDate(dateString) {
+  return new Date(dateString).toLocaleDateString("en-IN", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+}
 
-  const data = await getPaginatedBlogs(page);
-  const blog = data.data.find((item) => item.id === id);
+export async function generateMetadata({ params }) {
+  const { id } = await params;
+  const blog = await getBlogById(id);
 
   if (!blog) return {};
 
@@ -28,16 +31,20 @@ export async function generateMetadata({ params, searchParams }) {
 }
 
 export default async function BlogDetails({ params, searchParams }) {
-  const { id } = await params;
-  const search = await searchParams;
-  const page = Number(search?.page) || 1;
+  const resolveSearch = await searchParams;
+  const page = Number(resolveSearch?.page) || 1;
 
-  const data = await getPaginatedBlogs(page);
-  const blog = data.data.find((item) => item.id === id);
+  const { id } = await params;
+  const blog = await getBlogById(id);
 
   if (!blog) notFound();
 
-  const readingTime = calculateReadingTime(blog.main_content);
+  const readingTime = calculateReadingTime(blog.summary);
+
+  // For related posts (optional)
+  const { blogs } = await getPaginatedBlogs(page);
+
+  const relatedPosts = blogs.filter((item) => item.id !== blog.id).slice(0, 2);
 
   return (
     <>
@@ -54,94 +61,82 @@ export default async function BlogDetails({ params, searchParams }) {
           </Link>
 
           <span className="inline-block bg-black text-white mx-1 px-4 py-1 rounded-full text-sm mt-6 mb-4">
-            {blog.category}
+            {blog.news_site}
           </span>
 
           <h1 className="text-4xl md:text-5xl font-bold mb-4">{blog.title}</h1>
 
           <p className="text-gray-600 mb-6">
-            {readingTime} min read • {blog.created_at}
+            {readingTime} min read • {formatDate(blog.published_at)}
           </p>
 
           {/* Featured Image */}
           <div className="relative w-full h-[250px] sm:h-[350px] md:h-[450px] rounded-3xl overflow-hidden shadow-lg mb-10">
             <Image
-              src={blog.featured_image}
+              src={blog.image_url}
               alt={blog.title}
               fill
               priority
-              sizes="(max-width: 640px) 100vw,
-                     (max-width: 1024px) 100vw,
-                     1200px"
+              sizes="100vw"
               className="object-cover"
             />
           </div>
 
-          {/* Blog HTML Content */}
-          <div
-            className="prose prose-lg max-w-none
-                       prose-headings:font-bold
-                       prose-p:text-gray-700
-                       prose-blockquote:border-l-4
-                       prose-blockquote:border-indigo-500
-                       prose-blockquote:pl-4
-                       prose-blockquote:text-gray-600"
-            dangerouslySetInnerHTML={{ __html: blog.main_content }}
-          />
+          {/* Content */}
+          <div className="prose prose-lg max-w-none">
+            <p>{blog.summary}</p>
+
+            <a
+              href={blog.url}
+              target="_blank"
+              className="text-indigo-600 underline"
+            >
+              Read full article on {blog.news_site}
+            </a>
+          </div>
 
           {/* Related Posts */}
           <div className="mt-20">
             <h2 className="text-2xl font-bold mb-6">Related Articles</h2>
 
             <div className="grid sm:grid-cols-2 gap-6">
-              {data.data
-                .filter((item) => item.id !== blog.id)
-                .slice(0, 2)
-                .map((item) => (
-                  <Link
-                    key={item.id}
-                    href={`/blog/${item.id}?page=${page}`}
-                    className="group block"
-                  >
-                    <div className="rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition">
-                      <div className="relative w-full h-40">
-                        <Image
-                          src={item.featured_image}
-                          alt={item.title}
-                          fill
-                          sizes="(max-width: 640px) 100vw, 50vw"
-                          className="object-cover group-hover:scale-105 transition duration-500"
-                        />
-                      </div>
-
-                      <div className="p-4">
-                        <h3 className="font-semibold">{item.title}</h3>
-                      </div>
+              {relatedPosts.map((item) => (
+                <Link
+                  key={item.id}
+                  href={`/blog/${item.id}?page=${page}`}
+                  className="group block"
+                >
+                  <div className="rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition">
+                    <div className="relative w-full h-40">
+                      <Image
+                        src={item.image_url}
+                        alt={item.title}
+                        fill
+                        sizes="50vw"
+                        className="object-cover group-hover:scale-105 transition duration-500"
+                      />
                     </div>
-                  </Link>
-                ))}
+
+                    <div className="p-4">
+                      <h3 className="font-semibold">{item.title}</h3>
+                    </div>
+                  </div>
+                </Link>
+              ))}
             </div>
           </div>
         </div>
 
-        {/* Sticky Author Sidebar */}
+        {/* Author Sidebar */}
         <div className="hidden lg:block lg:col-span-1">
           <div className="sticky top-24 bg-white p-6 rounded-2xl shadow-md">
-            <div className="relative w-20 h-20 mb-4">
-              <Image
-                src={blog.user.profile_pic}
-                alt={blog.user.first_name}
-                fill
-                sizes="80px"
-                className="rounded-full object-cover"
-              />
-            </div>
-
             <h3 className="font-semibold">
-              {blog.user.first_name} {blog.user.last_name}
+              {blog.authors?.[0]?.name || blog.news_site}
             </h3>
 
-            <p className="text-sm text-gray-500 mt-2">{blog.user.role}</p>
+            <p className="text-sm text-gray-500 mt-2">
+              Published on {formatDate(blog.published_at)}
+            </p>
           </div>
         </div>
       </article>
