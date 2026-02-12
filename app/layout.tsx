@@ -1,5 +1,5 @@
 import "./globals.css";
-import ReduxProvider from "@/redux/provider";
+
 import Header from "@/components/Header";
 import { Poppins } from "next/font/google";
 import { Metadata } from "next";
@@ -24,10 +24,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${poppins.variable}  antialiased`}>
-        <ReduxProvider>
-          <Header />
-          <div className="py-7">{children}</div>
-        </ReduxProvider>
+        <Header />
+        <div className="py-7">{children}</div>
       </body>
     </html>
   );

@@ -14,7 +14,7 @@ export default function BlogCard({ blog, currentPage }) {
   return (
     <Link
       href={`/blog/${blog.id}?page=${currentPage}`}
-      className="group relative rounded-2xl overflow-hidden bg-slate-900 border border-slate-800 hover:border-indigo-500/40 transition-all duration-500 hover:shadow-2xl hover:shadow-indigo-500/10 flex flex-col"
+      className="group relative rounded-2xl overflow-hidden bg-slate-900 hover:border-indigo-500/40 transition-all duration-500 hover:shadow-2xl hover:shadow-indigo-500/10 flex flex-col"
     >
       {/* Image Section */}
       <div className="relative w-full h-56 sm:h-60 md:h-64 overflow-hidden">

@@ -54,12 +54,7 @@ export default function ProjectFeatures() {
           {/* State Management */}
           <FeatureCard
             title="🧠 State Management"
-            items={[
-              "Redux Toolkit integration",
-              "Centralized state handling",
-              "Scalable architecture",
-              "Separation of UI & data logic",
-            ]}
+            items={["Scalable architecture", "Separation of UI & data logic"]}
           />
 
           {/* UI / Design */}
@@ -80,7 +75,6 @@ export default function ProjectFeatures() {
             items={[
               "Server Components for fast load",
               "Optimized Next.js Image usage",
-              "Suspense boundaries",
               "Hydration-safe architecture",
             ]}
           />
@@ -93,7 +87,6 @@ export default function ProjectFeatures() {
           <div className="flex flex-wrap justify-center gap-4">
             {[
               "Next.js 14 (App Router)",
-              "Redux Toolkit",
               "Tailwind CSS",
               "REST API Integration",
               "Dynamic Routing",
