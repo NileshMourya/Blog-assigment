@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { getPaginatedBlogs } from "../../..lib/api";
+import { getPaginatedBlogs } from "../../../lib/api";
 import ReadingProgress from "../../../Components/ReadingProgress";
 
 import Link from "next/link";
@@ -54,7 +54,7 @@ export default async function BlogDetails({ params, searchParams }) {
             ← Back to Articles
           </Link>
 
-          <span className="inline-block bg-black text-white px-4 py-1 rounded-full text-sm mt-6 mb-4">
+          <span className="inline-block bg-black text-white mx-1 px-4 py-1 rounded-full text-sm mt-6 mb-4">
             {blog.category}
           </span>
 
