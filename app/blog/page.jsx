@@ -1,7 +1,6 @@
 import BlogCard from "@/components/BlogCard";
 import Pagination from "@/components/Pagination";
 import { getPaginatedBlogs } from "../../lib/api";
-import { memo } from "react";
 
 async function BlogPage({ searchParams }) {
   const params = await searchParams;
@@ -28,4 +27,4 @@ async function BlogPage({ searchParams }) {
   );
 }
 
-export default memo(BlogPage);
+export default BlogPage;
