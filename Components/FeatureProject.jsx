@@ -43,7 +43,7 @@ export default function ProjectFeatures() {
           <FeatureCard
             title="🔄 Smart Pagination System"
             items={[
-              "Uses next_page_url & prev_page_url",
+              "Uses limit=10&offset=20 & limit=10&offset=10",
               "Dynamic total page calculation",
               "Disabled state handling",
               "Query param-based navigation",
